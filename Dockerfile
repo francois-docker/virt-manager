@@ -2,20 +2,39 @@ FROM debian:stretch
 MAINTAINER François Billant <fbillant@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV VERSION=1.5.0
+ENV VERSION=v1.5.0
+
+copy entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 RUN sed -i.bak 's/stretch main/stretch main contrib non-free/g' /etc/apt/sources.list && \
 apt-get update && \
 apt-get install -y \
-virt-manager \
-ssh \
+git \
+python3 \
+python3-libvirt \
+libosinfo-1.0-dev \
+gobject-introspection \
+libglib2.0-bin \
+intltool \
+python3-gi \
+libvirt-glib-1.0-dev \
+python3-libxml2 \
+python3-requests \
+libgtk-3-dev \
+gir1.2-vte-2.91 \
+python3-gi-cairo \
 ssh-askpass-gnome \
 --no-install-recommends \
 && rm -rf /var/lib/apt/lists/*
 
-#RUN cd /home/ff &&\ 
-#wget --no-check-certificate https://ftp.mozilla.org/pub/firefox/releases/$VERSION/linux-x86_64/en-US/firefox-$VERSION.tar.bz2 && \
-#tar -xvf firefox-$VERSION.tar.bz2 && \
-#rm firefox-$VERSION.tar.bz2
+RUN cd /opt && \
+git clone https://github.com/virt-manager/virt-manager.git && \
+cd virt-manager && \
+#TODO: Currently broken because setup.py at tag 1.5.0 is for python2... Workaround, build from master...
+#git checkout tags/$VERSION && \
+./setup.py install && \
+cd /opt && \
+rm -Rf /opt/virt-manager
 
-CMD ["/usr/bin/virt-manager", "--no-fork"]
+entrypoint ["/entrypoint.sh"]
