@@ -23,6 +23,8 @@ python3-libxml2 \
 python3-requests \
 libgtk-3-dev \
 gir1.2-vte-2.91 \
+gir1.2-gtk-vnc-2.0 \
+gir1.2-spice-client-gtk-3.0 \
 python3-gi-cairo \
 ssh-askpass-gnome \
 --no-install-recommends \
